@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>Listado de Empleados</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/empleados}">Control de Empleados</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" th:href="@{/dashboard}">Inicio</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <h1>Lista de Empleados</h1>
+        </div>
+        <div class="row">
+            <div class="col-lg-3">
+                <a th:href="@{/empleados/nuevo}" class="btn btn-primary btn-sm mb-3">Agregar Empleado</a>
+            </div>
+        </div>
+        <br>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellidos</th>
+                    <th scope="col">DNI</th>
+                    <th scope="col">Telefono</th>
+                    <th scope="col">Correo</th>
+                    <th scope="col">Fecha Nacimiento</th>
+                    <th scope="col">Sexo</th>
+                    <th scope="col">Puesto</th>
+                    <th scope="col">Fecha Contratación</th>
+                    <th scope="col">Horario de Trabajo</th>
+                    <th scope="col">Salario</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="empleado : ${empleados}">
+                    <td th:text="${empleado.id_Empleado}"></td>
+                    <td th:text="${empleado.usuario.nombres}"></td>
+                    <td th:text="${empleado.usuario.apellidos}"></td>
+                    <td th:text="${empleado.usuario.dni}"></td>
+                    <td th:text="${empleado.usuario.telefono}"></td>
+                    <td th:text="${empleado.usuario.correo}"></td>
+                    <td th:text="${empleado.usuario.fecha_Nacimiento}"></td>
+                    <td th:text="${empleado.usuario.sexo}"></td>
+                    <td th:text="${empleado.puesto}"></td>
+                    <td th:text="${empleado.fecha_Contratacion}"></td>
+                    <td th:text="${empleado.horario_Trabajo}"></td>
+                    <td th:text="${empleado.salario}"></td>
+                    <td>
+                        <a th:href="@{/empleados/editar/{id}(id=${empleado.id_Empleado})}" class="btn btn-info">Editar</a>
+                        <a th:href="@{/empleados/{id}(id=${empleado.id_Empleado})}" class="btn btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

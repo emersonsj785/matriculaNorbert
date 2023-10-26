@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<title>Registro de DocenteCursoSeccion</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<div class="container">
+			<a class="navbar-brand" th:href="@{/docentecursoseccion}">Control de DocenteCursoSeccion</a>
+		</div>
+	</nav>
+
+	<br>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+				<h1 class="text-center">Registro de DocenteCurso - Seccion</h1>
+				<div class="card-body">
+					<form th:action="@{/docentecursoseccion/registro}" th:object="${docenteCursoSeccion}" method="post">
+						<div class="form-group">
+							<label>Docente Curso:</label>
+							<select name="docenteCurso.id_DocenteCurso" th:field="*{docenteCurso.id_DocenteCurso}"
+								class="form-control" required>
+								<option th:each="docenteCurso : ${docenteCursos}"
+									th:value="${docenteCurso.id_DocenteCurso}">
+									<span
+										th:text="${docenteCurso.id_DocenteCurso + ' - ' + '(' + docenteCurso.docente.usuario.nombres + ' con ' + docenteCurso.curso.nombre + ')'}"></span>
+								</option>
+							</select>
+						</div>
+
+						<div class="form-group">
+							<label>Sección:</label>
+							<select name="seccion.id_Seccion" th:field="*{seccion.id_Seccion}" class="form-control"
+								required>
+								<option th:each="seccion : ${secciones}" th:value="${seccion.id_Seccion}">
+									<span
+										th:text="${seccion.id_Seccion + ' - ' + seccion.nombre + ' (' + seccion.descripcion + ')'}"></span>
+								</option>
+							</select>
+						</div>
+
+						<div class="box-footer">
+							<button class="btn btn-success">Guardar</button>
+						</div>
+					</form>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+</html>

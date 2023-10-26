@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<title>Registro de Rol</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/roles}">Control de Roles</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+    
+    <br>
+    <div class="container">
+    	<div class="row">
+    		<div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+    			<h1 class="text-center">Registro de Roles</h1>
+    			<div class="card-body">
+    				<form th:action="@{/roles}" th:object="${roles}" method="post">
+    				<div class="form-group">
+    					<label>Nombre:</label>
+    					<input type="text" name="nombre_Rol" th:field="*{nombre_Rol}" class="form-control" placeholder="Digite su nombre: " required>
+    				</div>
+    				
+    				<div class="form-group">
+    					<label>Descripción:</label>
+    					<input type="text" name="descripcion" th:field="*{descripcion}" class="form-control" placeholder="Digite su descripcion: " required>
+    				</div>
+    				
+    				<div class="box-footer">
+    					<button class="btn btn-sucess">Guardar</button>
+    				</div>
+    				</form>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+
+</body>
+
+</html>

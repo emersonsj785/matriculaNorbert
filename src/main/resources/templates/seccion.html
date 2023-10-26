@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<title>Listado de Secciones</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/secciones}">Control de Seccion</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" th:href="@{/empleado}">Inicio</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <h1>Lista de Secciones</h1>
+        </div>
+        <div class="row">
+        	<div class="col-lg-3">
+        		<a th:href="@{/secciones/nuevo}" class="btn btn-primary btn-sm mb3">Agregar Sección</a>
+        	</div>
+        </div>
+        <br>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Dias a la Semana</th>
+                    <th scope="col">Hora</th>
+                    <th scope="col">Aforo</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="seccion: ${secciones}">
+                    <td th:text=${seccion.id_Seccion}></td>
+                    <td th:text=${seccion.nombre}></td>
+                    <td th:text=${seccion.descripcion}></td>
+                    <td th:text=${seccion.dias_Semana}></td>
+                    <td th:text=${seccion.hora}></td>
+                    <td th:text=${seccion.aforo}></td>
+                    <td>
+                    	<a th:href="@{/secciones/editar/{id}(id=${seccion.id_Seccion})}" class="btn btn-info">Editar</a>
+                    	<a th:href="@{/secciones/{id}(id=${seccion.id_Seccion})}" class="btn btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
