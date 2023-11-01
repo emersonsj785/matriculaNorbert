@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<title>Listado de Apoderados</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<div class="container">
+			<a class="navbar-brand" th:href="@{/apoderados}">Control de Apoderados</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+				aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item active">
+						<a class="nav-link" th:href="@{/empleado}">Inicio</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container mt-4">
+		<div class="row">
+			<h1>Lista de Apoderados</h1>
+		</div>
+		<div class="row">
+			<div class="col-lg-3">
+				<a th:href="@{/apoderados/nuevo}" class="btn btn-primary btn-sm mb3">Agregar Apoderado</a>
+			</div>
+		</div>
+		<br>
+		<table class="table">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Nombre</th>
+					<th scope="col">Apellidos</th>
+					<th scope="col">DNI</th>
+					<th scope="col">Telefono</th>
+					<th scope="col">Correo</th>
+					<th scope="col">Fecha Nacimiento</th>
+					<th scope="col">Sexo</th>
+					
+					<th scope="col">Parentesco</th>
+					<th scope="col">Ocupación</th>
+					<th scope="col">Dirección de Residencia</th>
+					
+					<th scope="col">Acciones</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="apoderado : ${apoderados}">
+					<td th:text="${apoderado.id_Apoderado}"></td>
+					<td th:text="${apoderado.usuario.nombres}"></td>
+					<td th:text="${apoderado.usuario.apellidos}"></td>
+					<td th:text="${apoderado.usuario.dni}"></td>
+					<td th:text="${apoderado.usuario.telefono}"></td>
+					<td th:text="${apoderado.usuario.correo}"></td>
+					<td th:text="${apoderado.usuario.fecha_Nacimiento}"></td>
+					<td th:text="${apoderado.usuario.sexo}"></td>
+					<td th:text="${apoderado.parentesco}"></td>
+					<td th:text="${apoderado.ocupacion}"></td>
+					<td th:text="${apoderado.direccion_Residencia}"></td>
+					<td>
+						<a th:href="@{/apoderados/editar/{id}(id=${apoderado.id_Apoderado})}" class="btn btn-info">Editar</a>
+						<a th:href="@{/apoderados/{id}(id=${apoderado.id_Apoderado})}" class="btn btn-danger">Eliminar</a>
+					</td>
+				</tr>
+			</tbody>
+
+		</table>
+	</div>
+</body>
+
+</html>

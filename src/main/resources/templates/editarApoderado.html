@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<title>Editar Apoderado</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<div class="container">
+			<a class="navbar-brand" th:href="@{/apoderados}">Actualización de Apoderados</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+				aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+		</div>
+	</nav>
+
+	<br>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+				<h1 class="text-center">Edición de Apoderados</h1>
+				<div class="card-body">
+					<form th:action="@{/apoderados/actualizar/{id}(id=${apoderado.id_Apoderado})}" th:object="${apoderado}"
+						method="post">
+						<!-- Campos del Docente -->
+						<div class="form-group">
+							<label for="parentesco">Parentesco</label>
+							<input type="text" class="form-control" id="parentesco" th:field="*{parentesco}" required>
+						</div>
+						<div class="form-group">
+							<label for="ocupacion">Ocupación</label>
+							<input type="text" class="form-control" id="ocupacion" th:field="*{ocupacion}" required>
+						</div>
+						<div class="form-group">
+							<label for="direccion_Residencia">Dirección Residencia</label>
+							<input type="text" class="form-control" id="direccion_Residencia" th:field="*{direccion_Residencia}" required>
+						</div>
+
+						<!-- Campos del Usuario relacionado -->
+						<div class="form-group">
+							<label for="nombres">Nombres del Usuario</label>
+							<input type="text" class="form-control" id="nombres" th:field="*{usuario.nombres}" required>
+						</div>
+						<div class="form-group">
+							<label for="apellidos">Apellidos del Usuario</label>
+							<input type="text" class="form-control" id="apellidos" th:field="*{usuario.apellidos}" required>
+						</div>
+						<div class="form-group">
+							<label for="dni">DNI del Usuario</label>
+							<input type="text" class="form-control" id="dni" th:field="*{usuario.dni}" required>
+						</div>
+						<div class="form-group">
+							<label for="telefono">Teléfono del Usuario</label>
+							<input type="text" class="form-control" id="telefono" th:field="*{usuario.telefono}" required>
+						</div>
+						<div class="form-group">
+							<label for="correo">Correo del Usuario</label>
+							<input type="text" class="form-control" id="correo" th:field="*{usuario.correo}" required>
+						</div>
+						<div class="form-group">
+							<label for="contrasenia">Contraseña del Usuario</label>
+							<input type="password" class="form-control" id="contrasenia"
+								th:field="*{usuario.contrasenia}" required>
+						</div>
+						<div class="form-group">
+							<label for="fechaNacimiento">Fecha de Nacimiento del Usuario</label>
+							<input type="text" class="form-control" id="fechaNacimiento"
+								th:field="*{usuario.fecha_Nacimiento}" required>
+						</div>
+						<div class="form-group">
+							<label for="sexo">Sexo del Usuario</label>
+							<input type="text" class="form-control" id="sexo" th:field="*{usuario.sexo}" required>
+						</div>
+
+						<button type="submit" class="btn btn-primary">Actualizar</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+</html>

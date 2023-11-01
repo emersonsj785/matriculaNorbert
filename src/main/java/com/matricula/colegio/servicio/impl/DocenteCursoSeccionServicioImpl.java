@@ -4,12 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.matricula.colegio.entidad.DocenteCurso;
 import com.matricula.colegio.entidad.DocenteCursoSeccion;
-import com.matricula.colegio.repositorio.IDocenteCursoRepositorio;
 import com.matricula.colegio.repositorio.IDocenteCursoSeccionRepositorio;
 import com.matricula.colegio.servicio.IDocenteCursoSeccionServicio;
-import com.matricula.colegio.servicio.IDocenteCursoServicio;
 
 @Service
 public class DocenteCursoSeccionServicioImpl implements IDocenteCursoSeccionServicio
