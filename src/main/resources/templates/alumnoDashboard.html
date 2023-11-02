@@ -61,8 +61,28 @@
 								</ul>
 							</td>
 							<td>
-								<button class="btn btn-primary btn-registrar" type="button"
-									onclick="mostrarVentanaEmergente()">Registrar</button>
+								<form th:action="@{/registrarMatricula}" method="post">
+									<input type="hidden" name="idSeccion" th:value="${seccion.id_Seccion}">
+									<input type="hidden" name="idAlumno" th:value="${ID_ALUMNO}">
+									<input type="hidden" name="idApoderado" th:value="${apoderadoId}">
+    								<button class="btn btn-primary" type="submit">Registrar</button>
+    								<!-- Agregar mensajes de rechazo -->
+								</form>
+								<div th:if="${rechazoSeccion}">
+									<p class="alert alert-danger">La sección no fue encontrada.</p>
+								</div>
+
+								<div th:if="${rechazoAlumno}">
+									<p class="alert alert-danger">El alumno no fue encontrado.</p>
+								</div>
+
+								<div th:if="${rechazoApoderado}">
+									<p class="alert alert-danger">El apoderado no fue encontrado.</p>
+								</div>
+								
+								<div th:if="${fichaExitosa}">
+									<p class="alert alert-success">Ficha Generada de manera correcta.</p>
+								</div>
 							</td>
 						</tr>
 					</tbody>
@@ -110,26 +130,7 @@
 		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYlT"
 		crossorigin="anonymous"></script>
 
-	<script>
-		let ventanaEmergente;
 
-		function mostrarVentanaEmergente() {
-			// Abre una nueva ventana emergente con una página en blanco
-			ventanaEmergente = window.open('', '', 'width=400,height=200');
-			// Agregar contenido personalizado a la ventana emergente
-			ventanaEmergente.document.write('<p>Se envió su OTP, ingresar:</p>');
-			ventanaEmergente.document.write('<input type="text" id="otpInput" placeholder="Ingrese OTP">');
-			ventanaEmergente.document.write('<button onclick="validarYCerrar()">Validar</button>');
-		}
-
-		function validarYCerrar() {
-			const otpInput = ventanaEmergente.document.getElementById('otpInput').value;
-			// Realiza validación aquí (agrega tu lógica)
-
-			// Cierra la ventana emergente
-			ventanaEmergente.close();
-		}
-	</script>
 
 
 </body>

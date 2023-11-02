@@ -1,5 +1,6 @@
 package com.matricula.colegio.controlador;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,6 +19,7 @@ import com.matricula.colegio.entidad.Alumno;
 import com.matricula.colegio.entidad.Apoderado;
 import com.matricula.colegio.entidad.DocenteCurso;
 import com.matricula.colegio.entidad.DocenteCursoSeccion;
+import com.matricula.colegio.entidad.FichaMatricula;
 import com.matricula.colegio.entidad.Seccion;
 import com.matricula.colegio.entidad.Usuario;
 import com.matricula.colegio.entidad.dto.ApoderadoDto;
@@ -26,8 +28,11 @@ import com.matricula.colegio.servicio.IAlumnoServicio;
 import com.matricula.colegio.servicio.IApoderadoServicio;
 import com.matricula.colegio.servicio.IDocenteCursoSeccionServicio;
 import com.matricula.colegio.servicio.IDocenteCursoServicio;
+import com.matricula.colegio.servicio.IFichaMatriculaServicio;
 import com.matricula.colegio.servicio.ISeccionServicio;
 import com.matricula.colegio.servicio.IUsuarioServicio;
+
+import jakarta.transaction.Transactional;
 
 
 @Controller
@@ -51,9 +56,13 @@ public class LoginController
 	 @Autowired
 	 private IApoderadoServicio apoderadoServicio;
 	 
+	 @Autowired
+	 private IFichaMatriculaServicio fichaMatriculaServicio;
+	 
 	 //VARIABLES
 	 public Long ID_ALUMNO= 0L;
 	 public String NOMBRE_ALUMNO= "";
+	 public Long ID_APODERADO = 0L;
 
 
     @GetMapping({"/login","/"})
@@ -133,6 +142,9 @@ public class LoginController
         model.addAttribute("docenteCursos", docenteCursos);
         model.addAttribute("docenteCursoSeccionList", docenteCursoSeccionList);
         model.addAttribute("nombres", NOMBRE_ALUMNO);
+        model.addAttribute("ID_ALUMNO", ID_ALUMNO);
+        model.addAttribute("apoderadoId", ID_APODERADO);
+
 
         return "alumnoDashboard";
     }
@@ -144,7 +156,8 @@ public class LoginController
         if (apoderadoOptional.isPresent()) {
         	Apoderado apoderado = apoderadoOptional.get();
             model.addAttribute("exito", true);
-            model.addAttribute("apoderadoId", apoderado.getId_Apoderado()); 
+            model.addAttribute("apoderadoId", apoderado.getId_Apoderado());
+            ID_APODERADO = apoderado.getId_Apoderado();
             System.out.println("Estamos en exito");
         } else {
         	System.out.println("Estamos en falso");
@@ -163,6 +176,58 @@ public class LoginController
         
         return "redirect:/dashboardAlumno";
     }
+    
+    @PostMapping("/registrarMatricula")
+    public String registrarMatricula(
+            @RequestParam("idSeccion") Long idSeccion,
+            @RequestParam("idAlumno") Long idAlumno,
+            @RequestParam("idApoderado") Long idApoderado,
+            Model model) {
+    	
+        // Obtener la instancia de Seccion desde el servicio
+        Optional<Seccion> seccionOptional = seccionServicio.obtenerSeccionPorId(idSeccion);
+        Optional<Alumno> alumnoOptional = alumnoServicio.obtenerAlumnoPorId(idAlumno);
+        Optional<Apoderado> apoderadoOptional = apoderadoServicio.obtenerApoderadoPorId(idApoderado);
+        
+        	System.out.println("Estoy dentro");
+        if (seccionOptional.isPresent()) {
+            Seccion seccion = seccionOptional.get();
+            
+            if(alumnoOptional.isPresent())
+            {
+            	Alumno alumno = alumnoOptional.get();
+            	
+            		if(apoderadoOptional.isPresent())
+            		{
+            			Apoderado apoderado = apoderadoOptional.get();
+            			System.out.println("Estamos dentro de la matricula");
+            			FichaMatricula fichaMatricula = new FichaMatricula();
+                        fichaMatricula.setSeccion(seccion);
+                        fichaMatricula.setAlumno(alumno);
+                        fichaMatricula.setApoderado(apoderado);
+                        fichaMatricula.setPeriodo("2024 - I");
+                        fichaMatricula.setFecha(LocalDate.now().toString()); // Fecha actual
+                        fichaMatricula.setEstado("Desactivado");
+
+                        // Guardar la ficha de matrícula en la base de datos
+                        fichaMatriculaServicio.generarMatricula(fichaMatricula);
+                        model.addAttribute("fichaExitosa", true);
+
+            		}else{
+            			model.addAttribute("rechazoApoderado", true);
+            		}
+            	
+            }else {
+            	model.addAttribute("rechazoAlumno", true);
+            }
+            
+        } else {
+        	model.addAttribute("rechazoSeccion", true);
+        }
+       
+        return mostrarAlumnoDashboard(model);
+    }
+
 
 
 
