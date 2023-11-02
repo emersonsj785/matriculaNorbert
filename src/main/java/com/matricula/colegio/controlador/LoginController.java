@@ -211,6 +211,13 @@ public class LoginController
 
                         // Guardar la ficha de matrícula en la base de datos
                         fichaMatriculaServicio.generarMatricula(fichaMatricula);
+                     // Actualizar el aforo restando 1
+                        int aforoActual = seccion.getAforo();
+                        if (aforoActual > 0) {
+                            seccion.setAforo(aforoActual - 1);
+                            seccionServicio.guardarSeccion(seccion);
+                        }
+
                         model.addAttribute("fichaExitosa", true);
 
             		}else{
