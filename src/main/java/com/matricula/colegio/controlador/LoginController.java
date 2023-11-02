@@ -1,6 +1,10 @@
 package com.matricula.colegio.controlador;
 
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,6 +27,7 @@ import com.matricula.colegio.entidad.FichaMatricula;
 import com.matricula.colegio.entidad.Seccion;
 import com.matricula.colegio.entidad.Usuario;
 import com.matricula.colegio.entidad.dto.ApoderadoDto;
+import com.matricula.colegio.entidad.dto.FichaMatriculaDto;
 import com.matricula.colegio.entidad.dto.UsuarioDto;
 import com.matricula.colegio.servicio.IAlumnoServicio;
 import com.matricula.colegio.servicio.IApoderadoServicio;
@@ -32,7 +37,14 @@ import com.matricula.colegio.servicio.IFichaMatriculaServicio;
 import com.matricula.colegio.servicio.ISeccionServicio;
 import com.matricula.colegio.servicio.IUsuarioServicio;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 
 
 @Controller
@@ -182,12 +194,17 @@ public class LoginController
             @RequestParam("idSeccion") Long idSeccion,
             @RequestParam("idAlumno") Long idAlumno,
             @RequestParam("idApoderado") Long idApoderado,
-            Model model) {
+            Model model, HttpServletResponse response) {
     	
         // Obtener la instancia de Seccion desde el servicio
         Optional<Seccion> seccionOptional = seccionServicio.obtenerSeccionPorId(idSeccion);
         Optional<Alumno> alumnoOptional = alumnoServicio.obtenerAlumnoPorId(idAlumno);
         Optional<Apoderado> apoderadoOptional = apoderadoServicio.obtenerApoderadoPorId(idApoderado);
+        // Obtener la lista de DocenteCurso desde el servicio
+        List<DocenteCurso> docenteCursos = docenteCursoServicio.listarTodosDocenteCursos();
+
+        // Obtener la lista de DocenteCursoSeccion desde el servicio
+        List<DocenteCursoSeccion> docenteCursoSeccionList = docenteCursoSeccionServicio.listarTodasDocenteCursoSeccion();
         
         	System.out.println("Estoy dentro");
         if (seccionOptional.isPresent()) {
@@ -206,7 +223,7 @@ public class LoginController
                         fichaMatricula.setAlumno(alumno);
                         fichaMatricula.setApoderado(apoderado);
                         fichaMatricula.setPeriodo("2024 - I");
-                        fichaMatricula.setFecha(LocalDate.now().toString()); // Fecha actual
+                        fichaMatricula.setFecha(new Date()); // Fecha actual
                         fichaMatricula.setEstado("Desactivado");
 
                         // Guardar la ficha de matrícula en la base de datos
@@ -216,6 +233,73 @@ public class LoginController
                         if (aforoActual > 0) {
                             seccion.setAforo(aforoActual - 1);
                             seccionServicio.guardarSeccion(seccion);
+                        }
+                     // Generar el informe PDF y enviarlo como respuesta
+                        try {
+                        	//SETEO
+                        	// Crear una lista para almacenar las cadenas formateadas
+                        	List<String> docenteCursoStrings = new ArrayList<>();
+
+                        	// Iterar a través de la lista de docenteCursoSeccionList
+                        	for (DocenteCursoSeccion docenteCursoSeccion : docenteCursoSeccionList) {
+                        	    // Verificar si la sección coincide
+                        	    if (docenteCursoSeccion.getSeccion().getId_Seccion() == seccion.getId_Seccion()) {
+                        	        // Construir la cadena con el formato deseado
+                        	        String formattedString = docenteCursoSeccion.getId() + " [ " +
+                        	                docenteCursoSeccion.getDocenteCurso().getDocente().getUsuario().getNombres() + " - " +
+                        	                docenteCursoSeccion.getDocenteCurso().getCurso().getNombre() + " ] ";
+
+                        	        // Agregar la cadena a la lista
+                        	        docenteCursoStrings.add(formattedString);
+                        	    }
+                        	}
+
+                        	// Convertir la lista de cadenas a una única cadena separada por comas
+                        	String docenteCursoString = String.join(", ", docenteCursoStrings);
+
+                        	// Establecer la cadena en el campo docenteCurso de FichaMatriculaDto
+                        	//we.setDocenteCurso(docenteCursoString);
+
+                        	//SETEO
+                            // Generar el informe Jasper Report
+                        	
+                        	FichaMatriculaDto we =  new FichaMatriculaDto();
+                        	we.setIdFicha(fichaMatricula.getIdFicha());
+                        	we.setApoderado(fichaMatricula.getApoderado());
+                        	we.setAlumno(fichaMatricula.getAlumno());
+                        	we.setSeccion(fichaMatricula.getSeccion());
+                        	we.setPeriodo(fichaMatricula.getPeriodo());
+                        	we.setFecha(fichaMatricula.getFecha());
+                        	we.setEstado(fichaMatricula.getEstado());
+                        	//we.setDocenteCurso(docenteCursos);
+                        	we.setDocenteCurso(docenteCursoString);
+                        	we.setDocenteCursoSec(docenteCursoSeccionList);
+                            JasperPrint jasperPrint = fichaMatriculaServicio.generarInformePDF(fichaMatricula);
+                            
+                            // Configurar la respuesta HTTP para el informe PDF
+                            response.setContentType("application/pdf");
+                            response.setHeader("Content-Disposition", "inline; filename=FichaMatricula.pdf");
+
+                            // Exportar el informe a PDF y escribirlo en la respuesta HTTP
+                            List<JasperPrint> jprintlist = new ArrayList<>();
+                    		jprintlist.add(jasperPrint);
+                    		//jasperStream.close();
+                            
+                            OutputStream out = response.getOutputStream();
+                            JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+                            
+                            JRPdfExporter exporter = new JRPdfExporter();
+                    		exporter.setExporterInput(SimpleExporterInput.getInstance(jprintlist));
+                            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(out));
+                            exporter.exportReport();
+                            
+                            // Cerrar el flujo de salida
+                            out.flush();
+                            out.close();
+                            
+                        } catch (Exception e) {
+                            // Manejar cualquier error que ocurra al generar o enviar el informe PDF
+                            e.printStackTrace();
                         }
 
                         model.addAttribute("fichaExitosa", true);

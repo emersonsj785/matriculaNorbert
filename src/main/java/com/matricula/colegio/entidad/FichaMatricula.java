@@ -1,5 +1,7 @@
 package com.matricula.colegio.entidad;
 
+import java.util.Date;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -38,11 +40,11 @@ public class FichaMatricula {
 
 
     private String periodo;
-    private String fecha;
+    private Date fecha;
     private String estado;
     
     
-	public FichaMatricula(String periodo, String fecha, String estado)
+	public FichaMatricula(String periodo, Date fecha, String estado)
 	{
 		super();
 		this.periodo = periodo;

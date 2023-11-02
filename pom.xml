@@ -61,6 +61,17 @@
         <artifactId>mysql-connector-java</artifactId>
         <version>8.0.27</version> <!-- Asegúrate de que la versión sea compatible -->
     </dependency>
+    <dependency>
+        <groupId>net.sf.jasperreports</groupId>
+        <artifactId>jasperreports</artifactId>
+        <version>6.17.0</version> <!-- Utiliza la versión más reciente disponible -->
+    </dependency>
+    <!-- Commons Collections (a menudo requerido por JasperReports) -->
+    <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>3.2.2</version> <!-- Utiliza la versión más reciente disponible -->
+    </dependency>
 	</dependencies>
 
 	<build>
