@@ -113,7 +113,16 @@ public class ApoderadoServicioImpl implements IApoderadoServicio
 		apoderadoRepositorio.deleteById(id);
 	}
 
-	
+	@Override
+    public Optional<Apoderado> buscarApoderadoPorDNI(String dni) {
+        Optional<Usuario> usuarioOptional = usuarioRepositorio.findByDni(dni);
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            // Ahora, busca el apoderado relacionado con este usuario
+            return apoderadoRepositorio.findByUsuario(usuario);
+        }
+        return Optional.empty(); // Retornar un Optional vacío si no se encuentra el apoderado
+    }
 	
 	
 }

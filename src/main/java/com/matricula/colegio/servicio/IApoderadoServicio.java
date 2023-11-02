@@ -13,4 +13,7 @@ public interface IApoderadoServicio
     Optional<Apoderado> obtenerApoderadoPorId(Long id);
     void actualizarApoderado(Long id, ApoderadoDto apoderadoDto);
     void eliminarApoderado(Long id);
+    
+ // Nuevo método para buscar apoderado por DNI
+    Optional<Apoderado> buscarApoderadoPorDNI(String dni);
 }

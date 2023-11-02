@@ -8,15 +8,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.matricula.colegio.entidad.Alumno;
+import com.matricula.colegio.entidad.Apoderado;
 import com.matricula.colegio.entidad.DocenteCurso;
 import com.matricula.colegio.entidad.DocenteCursoSeccion;
 import com.matricula.colegio.entidad.Seccion;
 import com.matricula.colegio.entidad.Usuario;
+import com.matricula.colegio.entidad.dto.ApoderadoDto;
+import com.matricula.colegio.entidad.dto.UsuarioDto;
 import com.matricula.colegio.servicio.IAlumnoServicio;
+import com.matricula.colegio.servicio.IApoderadoServicio;
 import com.matricula.colegio.servicio.IDocenteCursoSeccionServicio;
 import com.matricula.colegio.servicio.IDocenteCursoServicio;
 import com.matricula.colegio.servicio.ISeccionServicio;
@@ -40,6 +47,13 @@ public class LoginController
 	
 	 @Autowired
 	 private IDocenteCursoSeccionServicio docenteCursoSeccionServicio;
+	 
+	 @Autowired
+	 private IApoderadoServicio apoderadoServicio;
+	 
+	 //VARIABLES
+	 public Long ID_ALUMNO= 0L;
+	 public String NOMBRE_ALUMNO= "";
 
 
     @GetMapping({"/login","/"})
@@ -47,31 +61,6 @@ public class LoginController
         return "login"; // Asegúrate de crear la vista login.html
     }
 
-    /*@PostMapping("/login")
-    public String autenticarUsuario(String correo, String contrasenia, Model model, RedirectAttributes redirectAttributes) {
-        Optional<Usuario> usuarioOptional = usuarioServicio.autenticarUsuario(correo, contrasenia);
-        if (usuarioOptional.isPresent()) {
-        	
-            Usuario usuario = usuarioOptional.get();
-            long idPerfil = usuario.getPerfil().getId_Perfil();
-
-        	redirectAttributes.addFlashAttribute("nombres", usuario.getNombres());
-            if (idPerfil == 1) {
-                return "redirect:/dashboard"; // Redirige a dashboard.html
-            } else if (idPerfil == 2) {
-                return "redirect:/empleado"; // Redirige a empleado.html
-            } else if (idPerfil == 8) {
-                return "redirect:/apoderado"; // Redirige a apoderado.html
-            } else {
-                // El perfil no es 1, 2 ni 3, puedes manejarlo como desees
-                // Por ejemplo, redirigir a una página de error
-                return "redirect:/error";
-            }
-        } else {
-            model.addAttribute("error", "Correo o contraseña incorrectos");
-            return "login"; // Volver al formulario de inicio de sesión con un mensaje de error
-        }
-    }*/
     
     @PostMapping("/login")
     public String autenticarUsuario(String correo, String contrasenia, Model model, RedirectAttributes redirectAttributes) {
@@ -81,11 +70,12 @@ public class LoginController
             Optional<Alumno> alumnoOptional = alumnoServicio.autenticarAlumno(correo, contrasenia);
 
             if (alumnoOptional.isPresent()) {
-                Alumno alumno = alumnoOptional.get();
-                // Realizar las acciones necesarias para el usuario alumno
-                // Por ejemplo, establecer atributos en el modelo y redirigir a su página correspondiente.
-                redirectAttributes.addFlashAttribute("nombres", alumno.getNombres());
-                return "redirect:/dashboardAlumno";
+            	Alumno alumno = alumnoOptional.get();
+            	ID_ALUMNO = alumno.getId_Alumno();
+            	NOMBRE_ALUMNO = alumno.getNombres();
+            	//redirectAttributes.addFlashAttribute("nombres", alumno.getNombres());
+            	model.addAttribute("nombres", alumno.getNombres());
+            	return "redirect:/dashboardAlumno";
             }
         } else {
             Usuario usuario = usuarioOptional.get();
@@ -142,8 +132,39 @@ public class LoginController
         model.addAttribute("secciones", secciones);
         model.addAttribute("docenteCursos", docenteCursos);
         model.addAttribute("docenteCursoSeccionList", docenteCursoSeccionList);
+        model.addAttribute("nombres", NOMBRE_ALUMNO);
 
         return "alumnoDashboard";
     }
+    
+    @PostMapping("/buscarApoderado")
+    public String buscarApoderado(@RequestParam("dni") String dni, Model model) {
+        Optional<Apoderado> apoderadoOptional = apoderadoServicio.buscarApoderadoPorDNI(dni);
+
+        if (apoderadoOptional.isPresent()) {
+        	Apoderado apoderado = apoderadoOptional.get();
+            model.addAttribute("exito", true);
+            model.addAttribute("apoderadoId", apoderado.getId_Apoderado()); 
+            System.out.println("Estamos en exito");
+        } else {
+        	System.out.println("Estamos en falso");
+        	return "registroApoderadoPersonalizado";
+        }
+
+        return mostrarAlumnoDashboard(model);
+    }
+    
+    @PostMapping("/registroApoderadoPersonalizado")
+    public String registroApoderadoPersonalizado(
+            @ModelAttribute("usuario") UsuarioDto usuarioDto,
+            @ModelAttribute("apoderado") ApoderadoDto apoderadoDto) {
+        
+        apoderadoServicio.registrarApoderado(usuarioDto, apoderadoDto);
+        
+        return "redirect:/dashboardAlumno";
+    }
+
+
+
 
 }
