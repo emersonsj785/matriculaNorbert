@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.matricula.colegio.entidad.FichaMatricula;
+import com.matricula.colegio.entidad.dto.FichaMatriculaDto;
 import com.matricula.colegio.repositorio.IFichaMatriculaRepositorio;
 import com.matricula.colegio.servicio.IFichaMatriculaServicio;
 
@@ -31,7 +32,7 @@ public class FichaMatriculaServicioImpl implements  IFichaMatriculaServicio
 		return fichaMatriculaRepositorio.save(fichaMatricula);
 	}
 	
-	public JasperPrint generarInformePDF(FichaMatricula fichaMatricula) throws JRException{
+	public JasperPrint generarInformePDF(FichaMatriculaDto fichaMatricula) throws JRException{
             // Ruta al archivo .jrxml que define el diseño del informe
             String reportFile = "/Ficha_Matricula.jrxml";
             String rutaLogo = "/static/images/logoImagen.png";
@@ -46,7 +47,7 @@ public class FichaMatriculaServicioImpl implements  IFichaMatriculaServicio
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("LogoImagen", logo);
             // Crear una lista de objetos si el informe requiere datos
-            List<FichaMatricula> data = List.of(fichaMatricula);
+            List<FichaMatriculaDto> data = List.of(fichaMatricula);
 
             // Crear una fuente de datos con la lista
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(data);

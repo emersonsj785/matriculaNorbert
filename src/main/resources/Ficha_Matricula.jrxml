@@ -13,6 +13,10 @@
 	<field name="periodo" class="java.lang.String"/>
 	<field name="fecha" class="java.util.Date"/>
 	<field name="estado" class="java.lang.String"/>
+	<field name="docenteCurso" class="java.lang.String"/>
+	<field name="alumno.nombres" class="java.lang.String"/>
+	<field name="seccion.nombre" class="java.lang.String"/>
+	<field name="seccion.dias_Semana" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -71,7 +75,7 @@ Matrícula:]]></text>
 				<text><![CDATA[Av. Sol de Naranjal Mz A lt 9, Lima, Peru]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="440" y="90" width="80" height="21" uuid="a9c3f600-a50b-425f-8017-47d406f63e92"/>
+				<reportElement x="430" y="90" width="80" height="21" uuid="a9c3f600-a50b-425f-8017-47d406f63e92"/>
 				<text><![CDATA[990 411 915]]></text>
 			</staticText>
 			<rectangle>
@@ -102,7 +106,7 @@ Matrícula:]]></text>
 		<band height="21" splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="125" splitType="Stretch">
+		<band height="166" splitType="Stretch">
 			<textField>
 				<reportElement x="150" y="20" width="137" height="20" uuid="a12eb45c-4b51-4d33-8dd9-7e17d746ceeb"/>
 				<textFieldExpression><![CDATA[$F{idFicha}]]></textFieldExpression>
@@ -112,7 +116,7 @@ Matrícula:]]></text>
 				<textFieldExpression><![CDATA[$F{periodo}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="460" y="100" width="100" height="20" uuid="d3f45e60-b265-40bf-9475-9a0557688922"/>
+				<reportElement x="480" y="146" width="100" height="20" uuid="d3f45e60-b265-40bf-9475-9a0557688922"/>
 				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -123,14 +127,14 @@ Matrícula:]]></text>
 				<text><![CDATA[Código de Ficha:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="30" y="85" width="100" height="20" uuid="299a8617-42d4-4752-b2dd-7ef5f6682a00"/>
+				<reportElement x="30" y="125" width="100" height="20" uuid="299a8617-42d4-4752-b2dd-7ef5f6682a00"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Código de Sección:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="30" y="52" width="100" height="20" uuid="88b7d520-f9d7-4b7b-a6be-06ff1d75eb50"/>
+				<reportElement x="25" y="73" width="100" height="20" uuid="88b7d520-f9d7-4b7b-a6be-06ff1d75eb50"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -144,26 +148,34 @@ Matrícula:]]></text>
 				<text><![CDATA[Periodo:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="310" y="52" width="70" height="20" uuid="e5c46ef1-eb0e-4286-bba0-05915de13c13"/>
+				<reportElement x="305" y="72" width="70" height="20" uuid="e5c46ef1-eb0e-4286-bba0-05915de13c13"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Cursos:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="310" y="85" width="70" height="20" uuid="2592d132-6081-4e7d-b4b5-7ec51e058a88"/>
+				<reportElement x="310" y="125" width="70" height="20" uuid="2592d132-6081-4e7d-b4b5-7ec51e058a88"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Días de Clase:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="150" y="52" width="120" height="20" uuid="f920aac3-9f40-47b5-8564-662854ba8661"/>
-				<textFieldExpression><![CDATA[$F{alumno.id_Alumno}]]></textFieldExpression>
+				<reportElement x="145" y="73" width="120" height="20" uuid="f920aac3-9f40-47b5-8564-662854ba8661"/>
+				<textFieldExpression><![CDATA[$F{alumno.id_Alumno} + " - " + $F{alumno.nombres} ]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="150" y="84" width="106" height="22" uuid="49030977-cba9-47aa-9ca2-c2999fe4f5b4"/>
-				<textFieldExpression><![CDATA[$F{seccion.id_Seccion}]]></textFieldExpression>
+				<reportElement x="150" y="124" width="137" height="22" uuid="49030977-cba9-47aa-9ca2-c2999fe4f5b4"/>
+				<textFieldExpression><![CDATA[$F{seccion.id_Seccion} + " - " + $F{seccion.nombre} ]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="390" y="125" width="130" height="22" uuid="0e922872-7743-4759-b2bf-84424d4298df"/>
+				<textFieldExpression><![CDATA[$F{seccion.dias_Semana}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="390" y="73" width="170" height="47" uuid="e27d1245-e472-4f5d-9a3e-ab6419100481"/>
+				<textFieldExpression><![CDATA[$F{docenteCurso}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

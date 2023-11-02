@@ -274,7 +274,7 @@ public class LoginController
                         	//we.setDocenteCurso(docenteCursos);
                         	we.setDocenteCurso(docenteCursoString);
                         	we.setDocenteCursoSec(docenteCursoSeccionList);
-                            JasperPrint jasperPrint = fichaMatriculaServicio.generarInformePDF(fichaMatricula);
+                            JasperPrint jasperPrint = fichaMatriculaServicio.generarInformePDF(we);
                             
                             // Configurar la respuesta HTTP para el informe PDF
                             response.setContentType("application/pdf");
