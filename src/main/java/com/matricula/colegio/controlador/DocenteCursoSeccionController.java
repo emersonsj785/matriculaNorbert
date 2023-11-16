@@ -1,5 +1,9 @@
 package com.matricula.colegio.controlador;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,12 +16,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.lowagie.text.DocumentException;
 import com.matricula.colegio.entidad.DocenteCurso;
 import com.matricula.colegio.entidad.DocenteCursoSeccion;
+import com.matricula.colegio.entidad.Empleado;
 import com.matricula.colegio.entidad.Seccion;
 import com.matricula.colegio.servicio.IDocenteCursoSeccionServicio;
 import com.matricula.colegio.servicio.IDocenteCursoServicio;
 import com.matricula.colegio.servicio.ISeccionServicio;
+import com.matricula.colegio.servicio.impl.EmpleadoExporterExcel;
+import com.matricula.colegio.servicio.impl.RelacionSeccionExporterExcel;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 
 @Controller
@@ -113,6 +123,25 @@ public class DocenteCursoSeccionController
 	    {
 	        docenteCursoSeccionService.eliminarDocenteCursoSeccion(id);
 	        return "redirect:/docentecursoseccion";
+	    }
+	    
+	    @GetMapping("/exportarExcel")
+	    public void exportarListadoExcel(HttpServletResponse response) throws DocumentException, IOException
+	    {
+	    	response.setContentType("application/octet-stream");
+	    	
+	    	DateFormat dataFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+	    	String fechaActual = dataFormatter.format(new Date());
+	    	
+	    	String cabecera = "Content-Disposition";
+	    	String valor = "attachment; filename=Relacion_"+fechaActual+".xlsx";
+	    	
+	    	response.setHeader(cabecera, valor);
+	    	
+	    	List<DocenteCursoSeccion> relacion = docenteCursoSeccionService.listarTodasDocenteCursoSeccion();
+	    	
+	    	RelacionSeccionExporterExcel exporter = new RelacionSeccionExporterExcel(relacion);
+	    	exporter.exportar(response);
 	    }
 	
 	
