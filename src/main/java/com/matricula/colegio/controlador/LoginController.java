@@ -189,6 +189,7 @@ public class LoginController
         return "redirect:/dashboardAlumno";
     }
     
+    @Transactional
     @PostMapping("/registrarMatricula")
     public String registrarMatricula(
             @RequestParam("idSeccion") Long idSeccion,

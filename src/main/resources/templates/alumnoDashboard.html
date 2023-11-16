@@ -65,7 +65,7 @@
 									<input type="hidden" name="idSeccion" th:value="${seccion.id_Seccion}">
 									<input type="hidden" name="idAlumno" th:value="${ID_ALUMNO}">
 									<input type="hidden" name="idApoderado" th:value="${apoderadoId}">
-    								<button class="btn btn-primary" type="submit">Registrar</button>
+    								<button class="btn btn-primary btn-registrar" type="submit">Registrar</button>
     								<!-- Agregar mensajes de rechazo -->
 								</form>
 								<div th:if="${rechazoSeccion}">
@@ -76,9 +76,10 @@
 									<p class="alert alert-danger">El alumno no fue encontrado.</p>
 								</div>
 
-								<div th:if="${rechazoApoderado}">
-									<p class="alert alert-danger">El apoderado no fue encontrado.</p>
+								<div th:if="${rechazoApoderado}" class="alert alert-danger">
+    								<p>El apoderado no fue encontrado.</p>
 								</div>
+
 								
 								<div th:if="${fichaExitosa}">
 									<p class="alert alert-success">Ficha Generada de manera correcta.</p>
@@ -129,6 +130,56 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
 		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYlT"
 		crossorigin="anonymous"></script>
+		
+	<!-- ... Código HTML previo ... -->
+
+<!-- Script de jQuery y manejo de descarga de PDF -->
+<!--
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.btn-registrar').on('click', function(event) {
+            event.preventDefault(); // Evita la acción predeterminada del botón
+
+            var idSeccion = $(this).closest('tr').find('td:first').text().trim(); // Obtiene el ID de Sección
+            var idAlumno = $(this).closest('tr').find('input[name="idAlumno"]').val().trim(); // Obtiene el ID de Alumno
+            var idApoderado = $(this).closest('tr').find('input[name="idApoderado"]').val().trim(); // Obtiene el ID de Apoderado
+
+            $.ajax({
+                type: 'POST',
+                url: '/registrarMatricula',
+                data: {
+                    idSeccion: idSeccion,
+                    idAlumno: idAlumno,
+                    idApoderado: idApoderado
+                },
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                success: function(data) {
+                    var blob = new Blob([data]);
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = 'FichaMatricula.pdf';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error al generar el PDF: ' + error);
+                }
+            });
+        });
+    });
+</script>
+-->
+
+<!-- Resto del código HTML -->
+
+		
+
+
+
 
 
 
