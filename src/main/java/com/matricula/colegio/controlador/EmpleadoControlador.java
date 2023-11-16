@@ -1,5 +1,9 @@
 package com.matricula.colegio.controlador;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,12 +19,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.lowagie.text.DocumentException;
 import com.matricula.colegio.entidad.Empleado;
 import com.matricula.colegio.entidad.Usuario;
 import com.matricula.colegio.entidad.dto.EmpleadoDto;
 import com.matricula.colegio.entidad.dto.UsuarioDto;
 import com.matricula.colegio.servicio.IEmpleadoServicio;
 import com.matricula.colegio.servicio.IUsuarioServicio;
+import com.matricula.colegio.servicio.impl.EmpleadoExporterExcel;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 
 @Controller
@@ -124,5 +132,24 @@ public class EmpleadoControlador
         } else {
             return "empleadoNoEncontrado"; // Ajusta el nombre de la vista según tu aplicación
         }
+    }
+    
+    @GetMapping("/exportarExcel")
+    public void exportarListadoExcel(HttpServletResponse response) throws DocumentException, IOException
+    {
+    	response.setContentType("application/octet-stream");
+    	
+    	DateFormat dataFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+    	String fechaActual = dataFormatter.format(new Date());
+    	
+    	String cabecera = "Content-Disposition";
+    	String valor = "attachment; filename=Empleados_"+fechaActual+".xlsx";
+    	
+    	response.setHeader(cabecera, valor);
+    	
+    	List<Empleado> empleados = empleadoServicio.obtenerTodosLosEmpleados();
+    	
+    	EmpleadoExporterExcel exporter = new EmpleadoExporterExcel(empleados);
+    	exporter.exportar(response);
     }
 }
