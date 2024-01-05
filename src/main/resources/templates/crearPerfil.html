@@ -18,27 +18,32 @@
 			</button>
 		</div>
 	</nav>
-    
-    <br>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
-                <h1 class="text-center">Registro de Perfil</h1>
-                <div class="card-body">
-                    <form th:action="@{/perfiles}" th:object="${perfil}" method="post">
-                        <div class="form-group">
-                            <label>Nombre:</label>
-                            <input type="text" name="nombre_Perfil" th:field="*{nombre_Perfil}" class="form-control"
-                                placeholder="Digite el nombre del perfil" required>
-                        </div>
 
-                        <div class="form-group">
-                            <label>Descripción:</label>
-                            <input type="text" name="descripcion" th:field="*{descripcion}" class="form-control"
-                                placeholder="Digite la descripción del perfil" required>
-                        </div>
+	<br>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+				<h1 class="text-center">Registro de Perfil</h1>
+				<div class="card-body">
+					<form th:action="@{/perfiles}" th:object="${perfil}" method="post">
+						<div class="form-group">
+							<label>Nombre:</label>
+							<input type="text" th:field="*{nombre_Perfil}" class="form-control"
+								placeholder="Digite el nombre del perfil" >
+							<p th:if="${#fields.hasErrors('nombre_Perfil')}" th:errors="*{nombre_Perfil}"
+								class="text-danger"></p>
+						</div>
 
-                        <div class="form-group">
+						<div class="form-group">
+							<label>Descripción:</label>
+							<input type="text" th:field="*{descripcion}" class="form-control"
+								placeholder="Digite la descripción del perfil" >
+							<p th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"
+								class="text-danger"></p>
+						</div>
+
+
+						<div class="form-group">
 							<label for="rol">Rol:</label>
 							<select id="rol" name="rol.id_Rol" class="form-control">
 								<!-- Iterar a través de los roles disponibles y crear opciones para el select -->
@@ -49,14 +54,14 @@
 							</select>
 						</div>
 
-                        <div class="box-footer">
-                            <button type="submit" class="btn btn-success">Guardar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+						<div class="box-footer">
+							<button type="submit" class="btn btn-success">Guardar</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 
 </body>
 

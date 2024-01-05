@@ -8,6 +8,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,10 +57,16 @@ public class PerfilControlador
         model.addAttribute("perfil", perfil); // th:object
         return "crearPerfil";
     }
-
+    
     @PostMapping("/perfiles")
-    public String guardarPerfil(@ModelAttribute("perfil") Perfil perfil) {
-    	perfilServicio.crearPerfil(perfil);
+    public String guardarPerfil(@Validated @ModelAttribute("perfil") Perfil perfil, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+        	List<Rol> roles = rolService.listarTodosRoles(); // Obtener la lista de roles
+            model.addAttribute("roles", roles); // Agregar la lista de roles al modelo
+            model.addAttribute("perfil", perfil); // th:object
+            return "crearPerfil"; 
+        }
+        perfilServicio.crearPerfil(perfil);
         return "redirect:/perfiles";
     }
 
@@ -78,13 +86,20 @@ public class PerfilControlador
             return "perfilNoEncontrado"; // Ajusta el nombre de la vista según tus necesidades
         }
     }
-
-
+    
     @PostMapping("/perfiles/{id}")
-    public String actualizarPerfil(@PathVariable Long id, @ModelAttribute("perfil") Perfil perfil) {
-    	perfilServicio.actualizarPerfil(id, perfil);
+    public String actualizarPerfil(@PathVariable Long id, @Validated @ModelAttribute("perfil") Perfil perfil, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            List<Rol> roles = rolService.listarTodosRoles(); // Obtener la lista de roles
+            model.addAttribute("roles", roles); // Agregar la lista de roles al modelo
+            model.addAttribute("perfil", perfil); // th:object
+            return "editarPerfil";
+        }
+        System.out.println("Este es el id: " + id);
+        perfilServicio.actualizarPerfil(id, perfil);
         return "redirect:/perfiles";
     }
+
 
     @GetMapping("/perfiles/{id}")
     public String eliminarPerfil(@PathVariable Long id) {

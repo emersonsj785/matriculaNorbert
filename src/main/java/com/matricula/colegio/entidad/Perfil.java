@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,8 +25,10 @@ public class Perfil {
     @JoinColumn(name = "id_Rol")
     private Rol rol;
 
-
+    @NotBlank(message = "El nombre de Perfil no puede ser vacio.")
     private String nombre_Perfil;
+    
+    @NotBlank(message = "La descripción de Perfil no puede ser vacio.")
     private String descripcion;
 
     public Perfil(String nombre_Perfil, String descripcion)
